@@ -1,6 +1,6 @@
-#-------------------------------
+#--------------------------------
 #Reinforcement Learning Settings
-#-------------------------------
+#--------------------------------
 
 #How many frames do you want to train for?
 #(Should be at least 100_000 or else model will not be saved)

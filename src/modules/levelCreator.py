@@ -1,14 +1,16 @@
+import os
+import sys
+import json
+import pygame
 from modules import settings as s
 from modules.game_objects import player, blocks, enemies
-import os, sys, json
-import pygame
+
 
 class Eraser(pygame.sprite.Sprite):
     def __init__(self, group) -> None:
-         super().__init__(group)
-         self.image = pygame.image.load(os.path.join(s.ASSETS_PATH, "eraser.png")).convert_alpha()
-         self.rect = self.image.get_rect()
-
+        super().__init__(group)
+        self.image = pygame.image.load(os.path.join(s.ASSETS_PATH, "eraser.png")).convert_alpha()
+        self.rect = self.image.get_rect()
 
 
 class levelCreator():
@@ -25,27 +27,28 @@ class levelCreator():
         self.fileName = ''
         self.over_char = 0
         self.trackingBlock = None
-        self.collideBox = pygame.rect.Rect(0,0,s.BLOCK_SIZE,s.BLOCK_SIZE)
-        self.background = pygame.transform.smoothscale((pygame.image.load(os.path.join(s.ASSETS_PATH, "level_creator_bg.png"))), (s.WIDTH, s.HEIGHT)) 
+        self.collideBox = pygame.rect.Rect(0, 0, s.BLOCK_SIZE, s.BLOCK_SIZE)
+        self.background = pygame.transform.smoothscale((pygame.image.load(os.path.join(s.ASSETS_PATH, "level_creator_bg.png"))), (s.WIDTH, s.HEIGHT))
         self.select_splash = pygame.transform.smoothscale((pygame.image.load(os.path.join(s.ASSETS_PATH, "pause_screen.png"))), (s.WIDTH, s.HEIGHT*0.1))
         self.name_splash = pygame.transform.smoothscale((pygame.image.load(os.path.join(s.ASSETS_PATH, "pause_screen.png"))), (s.WIDTH*0.4, s.HEIGHT*0.3))
         self.outline = pygame.transform.smoothscale((pygame.image.load(os.path.join(s.ASSETS_PATH, "outline.png"))), (s.BLOCK_SIZE*1.2, s.BLOCK_SIZE*1.2))
         self.help_splash = pygame.transform.smoothscale((pygame.image.load(os.path.join(s.ASSETS_PATH, "pause_screen.png"))), (s.WIDTH*0.8, s.HEIGHT*0.8))
         self.samples = pygame.sprite.Group()
         self.placed = pygame.sprite.Group()
-        self.player = player.Player(0,0,self.samples)
-        self.brick = blocks.Brick(0,0,self.samples)
-        self.floor = blocks.Floor(0,0,self.samples)
-        self.spawn_block = blocks.Spawn_Block(0,0,self.samples)
-        self.flag = blocks.Flag(0,0,self.samples)
-        self.enemy1 = enemies.Red_Enemy(0,0,self.samples)
-        self.enemy2 = enemies.Purple_Enemy(0,0,self.samples)
+        self.player = player.Player(0, 0, self.samples)
+        self.brick = blocks.Brick(0, 0, self.samples)
+        self.floor = blocks.Floor(0, 0, self.samples)
+        self.spawn_block = blocks.Spawn_Block(0, 0, self.samples)
+        self.flag = blocks.Flag(0, 0, self.samples)
+        self.enemy1 = enemies.Red_Enemy(0, 0, self.samples)
+        self.enemy2 = enemies.Purple_Enemy(0, 0, self.samples)
         self.eraser = Eraser(self.samples)
 
     def show(self):
         """
-        display level creator
+        Display level creator
         """
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
@@ -64,7 +67,7 @@ class levelCreator():
                 elif pos[1] >= self.select_splash.get_height()+s.BLOCK_SIZE*2:
                     if self.selected is not None:
                         new_x = int(pos[0]/s.BLOCK_SIZE)*s.BLOCK_SIZE
-                        new_y = (pos[1]+(s.BLOCK_SIZE - pos[1]%s.BLOCK_SIZE))+(s.HEIGHT % s.BLOCK_SIZE)
+                        new_y = (pos[1]+(s.BLOCK_SIZE - pos[1] % s.BLOCK_SIZE))+(s.HEIGHT % s.BLOCK_SIZE)
                         self.collideBox.bottomleft = (new_x, new_y)
                         for i in self.placed:
                             if i.rect.colliderect(self.collideBox):
@@ -140,7 +143,7 @@ class levelCreator():
                     self.reset()
                     self.active = False
                     return
-                                  
+
         for idx, i in enumerate(self.samples):
             if not isinstance(i, blocks.Flag) and not isinstance(i, enemies.Purple_Enemy):
                 i.image = pygame.transform.smoothscale(i.image, (s.BLOCK_SIZE, s.BLOCK_SIZE))
@@ -150,18 +153,18 @@ class levelCreator():
             i.rect.centerx = (s.WIDTH/(len(self.samples)+1))*(idx+1)
             i.rect.centery = s.HEIGHT*0.05
 
-        self.screen.blit(self.background, (0,0))
+        self.screen.blit(self.background, (0, 0))
         self.placed.draw(self.screen)
-        self.screen.blit(self.select_splash, (0,0))
+        self.screen.blit(self.select_splash, (0, 0))
         if self.selected_obj is not None:
             self.screen.blit(self.outline, (self.selected_obj.rect.left-s.BLOCK_SIZE*0.1, self.selected_obj.rect.top-s.BLOCK_SIZE*0.1))
-            
+
         self.samples.draw(self.screen)
         newFont = pygame.font.SysFont('sans-serif', int(s.WIDTH*0.035))
-        help_msg = newFont.render("Press 'h' to show help menu", True, (0,0,0))
+        help_msg = newFont.render("Press 'h' to show help menu", True, (0, 0, 0))
         rect1 = help_msg.get_rect()
         rect1.bottomright = (s.WIDTH, s.HEIGHT*0.95)
-        save_msg = newFont.render("Press 's' to save level", True, (0,0,0))
+        save_msg = newFont.render("Press 's' to save level", True, (0, 0, 0))
         rect2 = save_msg.get_rect()
         rect2.bottomright = (s.WIDTH, s.HEIGHT)
 
@@ -171,6 +174,10 @@ class levelCreator():
         pygame.display.flip()
 
     def reset(self):
+        """
+        Reset level creator
+        """
+
         self.active = False
         self.selected = None
         self.erasing = False
@@ -183,7 +190,7 @@ class levelCreator():
 
     def save(self):
         """
-        save level
+        Save level
         """
 
         self.shift_blocks()
@@ -205,7 +212,6 @@ class levelCreator():
         levelHeight = int((s.HEIGHT - highest_block.rect.top)/s.BLOCK_SIZE)
         levelWidth = int(rightmost_block.rect.right/s.BLOCK_SIZE)
 
-
         savedLevel = []
         curY = s.HEIGHT - s.BLOCK_SIZE*(3/4)
         curX = s.BLOCK_SIZE/2
@@ -221,33 +227,34 @@ class levelCreator():
             savedLevel.insert(0, a)
             curY -= s.BLOCK_SIZE
             curX = s.BLOCK_SIZE/2
-        
+
         saveDict = {
-            'level':savedLevel,
+            'level': savedLevel,
         }
-        
+
         self.naming = True
         while self.naming:
             self.nameFile()
-        
+
         if self.fileName == '':
             return
-        
+
         if not os.path.exists("./levels"):
             os.makedirs("./levels")
         with open(f"./levels/{self.fileName}.json", 'w') as outfile:
             json.dump(saveDict, outfile)
-        
+
         self.reset()
         self.active = False
         return
 
     def nameFile(self):
         """
-        menu to name level
+        Menu to name level
         """
-        color = (255,255,255)
-        input_rect = pygame.Rect(0,0, self.name_splash.get_width()*0.8, self.name_splash.get_height()*0.265)
+
+        color = (255, 255, 255)
+        input_rect = pygame.Rect(0, 0, self.name_splash.get_width()*0.8, self.name_splash.get_height()*0.265)
         input_rect.center = (s.WIDTH/2, s.HEIGHT/2)
         name_rect = self.name_splash.get_rect()
         name_rect.center = (s.WIDTH/2, s.HEIGHT/2)
@@ -256,10 +263,7 @@ class levelCreator():
             if event.type == pygame.QUIT:
                 sys.exit()
             if event.type == pygame.KEYDOWN:
-    
-                # Check for backspace
                 if event.key == pygame.K_BACKSPACE:
-                    # get text input from 0 to -1 i.e. end.
                     self.fileName = self.fileName[:-1]
                     if self.over_char > 0:
                         self.over_char -= 1
@@ -270,28 +274,25 @@ class levelCreator():
                 elif event.key == pygame.K_RETURN:
                     self.naming = False
                     return
-                # Unicode standard is used for string
-                # formation
                 elif len(self.fileName) < 20 and event.key in s.LEGAL_CHARS:
                     self.fileName += event.unicode
-            
+
         self.screen.blit(self.name_splash, name_rect)
-        
+
         pygame.draw.rect(self.screen, color, input_rect)
-        text_surface = self.font.render(self.fileName[self.over_char:], True, (0,0,0))
+        text_surface = self.font.render(self.fileName[self.over_char:], True, (0, 0, 0))
         text_rect = text_surface.get_rect()
         if text_rect.width > input_rect.width-40:
             self.over_char += 1
-            text_surface = self.font.render(self.fileName[self.over_char:], True, (0,0,0))
+            text_surface = self.font.render(self.fileName[self.over_char:], True, (0, 0, 0))
             text_rect = text_surface.get_rect()
         text_rect.x = input_rect.x+20
         text_rect.centery = input_rect.centery
-        # render at position stated in arguments
         self.screen.blit(text_surface, text_rect)
-        
+
         newFont = pygame.font.SysFont('sans-serif', int(s.WIDTH*0.035))
-        msg1 = newFont.render("Name your level:", True, (0,0,0))
-        msg2 = newFont.render("Press 'enter' when complete", True, (0,0,0))
+        msg1 = newFont.render("Name your level:", True, (0, 0, 0))
+        msg2 = newFont.render("Press 'enter' when complete", True, (0, 0, 0))
         rect1 = msg1.get_rect()
         rect2 = msg2.get_rect()
         rect1.center = (s.WIDTH*0.5, s.HEIGHT*0.425)
@@ -304,10 +305,11 @@ class levelCreator():
 
     def helpMenu(self):
         """
-        help menu
+        Display help menu
         """
+
         msgArray = [
-            "To select an item, click on it from the menu.", 
+            "To select an item, click on it from the menu.",
             "To place the item, click on the spot where you want it to be.",
             "You can use the left and right arrow keys to scroll",
             "through your level.",
@@ -322,18 +324,18 @@ class levelCreator():
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_h or event.key == pygame.K_ESCAPE:
                         return
-            
-            surf1 = newFont.render(msgArray[0], True, (0,0,0))
+
+            surf1 = newFont.render(msgArray[0], True, (0, 0, 0))
             rect1 = surf1.get_rect()
-            surf2 = newFont.render(msgArray[1], True, (0,0,0))
+            surf2 = newFont.render(msgArray[1], True, (0, 0, 0))
             rect2 = surf2.get_rect()
-            surf3 = newFont.render(msgArray[2], True, (0,0,0))
+            surf3 = newFont.render(msgArray[2], True, (0, 0, 0))
             rect3 = surf3.get_rect()
-            surf4 = newFont.render(msgArray[3], True, (0,0,0))
+            surf4 = newFont.render(msgArray[3], True, (0, 0, 0))
             rect4 = surf4.get_rect()
-            surf5 = newFont.render(msgArray[4], True, (0,0,0))
+            surf5 = newFont.render(msgArray[4], True, (0, 0, 0))
             rect5 = surf5.get_rect()
-            surf6 = newFont.render(msgArray[5], True, (0,0,0))
+            surf6 = newFont.render(msgArray[5], True, (0, 0, 0))
             rect6 = surf6.get_rect()
             rect1.center = (s.WIDTH*0.5, s.HEIGHT*0.3)
             rect2.center = (s.WIDTH*0.5, s.HEIGHT*0.4)
@@ -351,6 +353,9 @@ class levelCreator():
             pygame.display.flip()
 
     def shift_blocks(self):
+        """
+        Shift all blocks so that player is on the left of the screen
+        """
 
         save_player = None
         for i in self.placed:

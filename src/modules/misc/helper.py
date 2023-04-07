@@ -3,6 +3,7 @@ from IPython import display
 
 plt.ion()
 
+
 def plot(scores, mean_scores):
     """
     used to plot training for rl models

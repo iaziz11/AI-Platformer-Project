@@ -1,6 +1,7 @@
 from modules.NEAT.data_structs.randomHashSet import RandomHashSet
 from modules.NEAT.genome.genome import Genome
 
+
 class Species():
     def __init__(self, repr) -> None:
         self.clients = RandomHashSet()
@@ -23,7 +24,7 @@ class Species():
     def goExtinct(self):
         for c in self.clients.getData():
             c.setSpecies(None)
-        
+
     def evalScore(self):
         v = 0
         for c in self.clients.getData():
@@ -63,13 +64,9 @@ class Species():
 
     def getClients(self):
         return self.clients
-    
+
     def getRepresentative(self):
         return self.representative
-    
+
     def getScore(self):
         return self.score
-
-
-
-    

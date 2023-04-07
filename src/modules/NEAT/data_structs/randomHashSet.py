@@ -1,16 +1,17 @@
 import random
 
+
 class RandomHashSet():
     def __init__(self) -> None:
         self._set = set()
         self._data = []
-        
+
     def contains(self, a):
         return a in self._set
 
     def random_element(self):
         if self.size() > 0:
-            return self._data[random.randrange(0,len(self._data))]
+            return self._data[random.randrange(0, len(self._data))]
         return None
 
     def size(self):
@@ -28,7 +29,7 @@ class RandomHashSet():
     def get_object(self, i):
         if i >= self.size():
             raise Exception("Index out of range")
-        
+
         return self._data[i]
 
     def get_index(self, a):
@@ -39,7 +40,6 @@ class RandomHashSet():
             raise Exception("Index out of range")
         self._set.remove(self._data[i])
         self._data.remove(self._data[i])
-
 
     def remove_object(self, a):
         self._set.remove(a)
@@ -60,13 +60,3 @@ class RandomHashSet():
                     self._set.add(a)
                     return
             self.add(a)
-                
-
-
-
-
-    
-
-
-    
-

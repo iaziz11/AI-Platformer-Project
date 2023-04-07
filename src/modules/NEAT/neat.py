@@ -1,10 +1,11 @@
 from modules.NEAT.data_structs.randomHashSet import RandomHashSet
-from modules.NEAT.data_structs.randomSelector import randomSelector 
+from modules.NEAT.data_structs.randomSelector import randomSelector
 from modules.NEAT.genome.nodeGene import NodeGene
 from modules.NEAT.genome.genome import Genome
 from modules.NEAT.genome.connectionGene import connectionGene
 from modules.NEAT.client import Client
 from modules.NEAT.species import Species
+
 
 class Neat():
     def __init__(self, input_size, output_size, clients) -> None:
@@ -27,22 +28,28 @@ class Neat():
 
     def printSpecies(self):
         """
-        prints all the species
+        Prints all the species
         """
+
         print("#########################")
         for s in self.species.getData():
             print(f"{s}.....{s.getScore()}......{s.size()}")
 
     def empty_genome(self):
         """
-        create an empty genome
+        Create an empty genome
         """
+
         g = Genome(self)
         for i in range(self.input_size+self.output_size):
             g.getNodes().add(self.getNode(i+1))
         return g
 
-    def reset(self,input_size, output_size, clients):
+    def reset(self, input_size, output_size, clients):
+        """
+        Reset genome
+        """
+
         self.input_size = input_size
         self.output_size = output_size
         self.max_clients = clients
@@ -53,7 +60,7 @@ class Neat():
             n = self.getNode()
             n.setX(0.1)
             n.setY((i+1)/(self.input_size+1))
-            
+
         for i in range(self.output_size):
             n = self.getNode()
             n.setX(0.9)
@@ -68,7 +75,6 @@ class Neat():
     def getClient(self, i):
         return self.clients.get_object(i)
 
-
     def getNode(self, id=None):
         if id is not None:
             if id <= self.all_nodes.size():
@@ -77,7 +83,7 @@ class Neat():
         n = NodeGene(self.all_nodes.size()+1)
         self.all_nodes.add(n)
         return n
-    
+
     def getConnection(self, node1, node2, copy=None):
 
         if copy is not None:
@@ -93,13 +99,13 @@ class Neat():
             cg.setInnovationNum(self.all_connections.get(cg).getInnovationNum())
         else:
             cg.setInnovationNum(len(self.all_connections)+1)
-            self.all_connections.update({cg:cg})
-        
+            self.all_connections.update({cg: cg})
+
         return cg
 
     def getC1(self):
         return self.c1
-    
+
     def getC2(self):
         return self.c2
 
@@ -123,7 +129,7 @@ class Neat():
 
     def getPROB_MUTATE_WEIGHT_RANDOM(self):
         return self.PROB_MUTATE_WEIGHT_RANDOM
-    
+
     def getPROB_MUTATE_TOGGLE(self):
         return self.PROB_MUTATE_TOGGLE
 
@@ -133,7 +139,6 @@ class Neat():
     def setSpeciesThreshold(self, a):
         self.species_threshold = a
 
-
     def evolve(self):
         self.gen_species()
         self.kill()
@@ -142,12 +147,12 @@ class Neat():
         self.mutate()
         for c in self.clients.getData():
             c.generate_calculator()
-        
 
     def gen_species(self):
         """
-        generate all the species for current generation
+        Generate all the species for current generation
         """
+
         for s in self.species.getData():
             s.reset()
 
@@ -167,26 +172,28 @@ class Neat():
 
     def kill(self):
         """
-        kill off percentage of clients from each species
+        Kill off percentage of clients from each species
         """
         for s in self.species.getData():
             s.kill(1-self.SURVIVORS)
 
     def remove_extinct(self):
         """
-        delete extinct species
+        Delete extinct species
         """
+
         i = self.species.size()-1
         while i >= 0:
             if self.species.get_object(i).size() <= 0:
                 self.species.get_object(i).goExtinct()
                 self.species.remove_index(i)
             i -= 1
-            
+
     def reproduce(self):
         """
-        breed two clients
+        Breed two clients
         """
+
         selector = randomSelector()
         for s in self.species.getData():
             selector.add(s, s.getScore())
@@ -201,6 +208,10 @@ class Neat():
                 s.forcePut(c)
 
     def mutate(self):
+        """
+        Mutate client
+        """
+
         for c in self.clients.getData():
             c.mutate()
 
@@ -213,18 +224,3 @@ class Neat():
         if data is None:
             return 0
         return data.getReplaceIndex()
-
-
-
-
-
-        
-
-
-    
-
-
-
-
-
-

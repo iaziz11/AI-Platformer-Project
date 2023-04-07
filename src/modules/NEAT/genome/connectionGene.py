@@ -1,5 +1,6 @@
 from modules.NEAT.genome.gene import Gene
 
+
 class connectionGene(Gene):
     def __init__(self, fromNode, toNode) -> None:
         super().__init__(None)

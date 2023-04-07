@@ -1,5 +1,6 @@
 import math
 
+
 class Node():
     def __init__(self, x) -> None:
         self.x = x
@@ -17,7 +18,7 @@ class Node():
 
     def setX(self, a):
         self.x = a
-    
+
     def setOutput(self, a):
         self.output = a
 
@@ -33,20 +34,21 @@ class Node():
             if c.isEnabled():
                 sum += c.getWeight() * c.getFrom().getOutput()
         self.output = self.activation_fun(sum)
-            
+
     def activation_fun(self, x):
         """
-        returns sigmoid(x)
+        Returns sigmoid(x)
         """
+
         return 1/(1+math.exp(-x))
 
     def compareTo(self, o):
         """
-        compares self to other
+        Compares self to other
         """
+
         if self.getX() > o.getX():
             return -1
         if self.getX() < o.getX():
             return 1
         return 0
-    

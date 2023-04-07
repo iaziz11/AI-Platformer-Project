@@ -1,5 +1,6 @@
 from modules.NEAT.calculations.calculator import Calculator
 
+
 class Client():
     def __init__(self) -> None:
         self.genome = None
@@ -20,16 +21,16 @@ class Client():
 
     def getGenome(self):
         return self.genome
-    
+
     def setGenome(self, a):
         self.genome = a
-    
+
     def getScore(self):
         return self.score
 
     def setScore(self, a):
         self.score = a
-    
+
     def getSpecies(self):
         return self.species
 

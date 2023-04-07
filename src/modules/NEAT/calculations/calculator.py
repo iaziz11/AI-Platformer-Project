@@ -1,6 +1,7 @@
 from modules.NEAT.calculations.node import Node
 from modules.NEAT.calculations.connection import Connection
 
+
 class Calculator():
     def __init__(self, g) -> None:
         self.input_nodes = []
@@ -12,7 +13,7 @@ class Calculator():
 
         for n in self.nodes.getData():
             node = Node(n.getX())
-            self.node_map.update({n.getInnovationNum():node})
+            self.node_map.update({n.getInnovationNum(): node})
 
             if n.getX() <= 0.1:
                 self.input_nodes.append(node)
@@ -20,7 +21,7 @@ class Calculator():
                 self.output_nodes.append(node)
             else:
                 self.hidden_nodes.append(node)
-        
+
         self.hidden_nodes.sort(key=lambda a: a.x)
 
         for c in self.cons.getData():
@@ -36,12 +37,11 @@ class Calculator():
 
             toNode.getConnections().append(con)
 
-        
-
     def calculate(self, input):
         """
-        determine output of nn
+        Determine output of nn
         """
+
         if len(input) != len(self.input_nodes):
             raise Exception("Data doesn't fit")
         for i in range(len(self.input_nodes)):

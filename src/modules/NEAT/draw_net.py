@@ -1,12 +1,12 @@
-import pygame, random
-import numpy, time, sys
+import pygame
+import sys
 from modules.NEAT.neat import Neat
-import json
-import itertools, pickle
+import pickle
+
 
 class draw():
     def __init__(self, neat) -> None:
-        self.screen_size = (1200,800)
+        self.screen_size = (1200, 800)
         self.neat = neat
         self.g = None
         self.c = None
@@ -14,14 +14,15 @@ class draw():
         self.radius = 10
         self.nodeMap = []
         self.save = {
-            "Nodes":[],
-            "Connections":[]
+            "Nodes": [],
+            "Connections": []
         }
 
     def getBestClient(self):
         """
-        get the best performing client from the best performing species
+        Get the best performing client from the best performing species
         """
+
         if self.neat.species.size() > 0:
             a = self.neat.species.getData().copy()
             a.sort(key=lambda x: x.getScore())
@@ -35,26 +36,27 @@ class draw():
 
     def drawScreen(self, screen):
         """
-        draw the network of the best client from the best species
+        Draw the network of the best client from the best species
         """
+
         self.screen = pygame.display.set_mode(self.screen_size)
-        self.screen.fill((0,0,0))
+        self.screen.fill((0, 0, 0))
         if self.neat.species.size() > 0:
             self.getBestClient()
             for n in self.g.nodes.getData():
-                pygame.draw.circle(self.screen, (255,255,255), (n.getX()*self.screen_size[0], n.getY()*self.screen_size[1]), self.radius)
+                pygame.draw.circle(self.screen, (255, 255, 255), (n.getX()*self.screen_size[0], n.getY()*self.screen_size[1]), self.radius)
             for c in self.g.connections.getData():
-                color = (0,255,0) if c.isEnabled() else (255,0,0)
-                pygame.draw.line(self.screen, color, (c.getFrom().getX()*self.screen_size[0]+self.radius, c.getFrom().getY()*self.screen_size[1]), (c.getTo().getX()*self.screen_size[0]-self.radius,c.getTo().getY()*self.screen_size[1]))
-
+                color = (0, 255, 0) if c.isEnabled() else (255, 0, 0)
+                pygame.draw.line(self.screen, color, (c.getFrom().getX()*self.screen_size[0]+self.radius, c.getFrom().getY()*self.screen_size[1]), (c.getTo().getX()*self.screen_size[0]-self.radius, c.getTo().getY()*self.screen_size[1]))
             pygame.display.flip()
         else:
             print("Not enough species")
 
     def listNodes(self):
         """
-        get a list of all the nodes in the network
+        Get a list of all the nodes in the network
         """
+
         for c in self.g.connections.getData():
             found = False
             for i in self.nodeMap:
@@ -74,14 +76,14 @@ class draw():
                     found = True
             if not found:
                 self.nodeMap.append([c.getTo(), c.hashCode(), None])
-        
+
     def saveClient(self, name):
         """
-        save the best representative of the best performing species
+        Save the best representative of the best performing species
         """
+
         with open(f"{name}.pkl", "wb") as out:
             pickle.dump(self.s.representative, out, 0)
-
 
 
 if __name__ == "__main__":
@@ -91,7 +93,8 @@ if __name__ == "__main__":
     while True:
         drawNet.drawScreen()
         for event in pygame.event.get():
-            if event.type == pygame.QUIT: sys.exit()
+            if event.type == pygame.QUIT:
+                sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_1:
                     for a in neat.clients.getData():
@@ -120,19 +123,3 @@ if __name__ == "__main__":
                         sum += i.clients.size()
                     print(neat.species.size())
                     print(sum)
-                        
-
-
-
-
-    
-                
-
-
-
-
-
-
-
-
-

@@ -1,5 +1,6 @@
 from modules.NEAT.genome.gene import Gene
 
+
 class NodeGene(Gene):
     def __init__(self, innovation_num) -> None:
         super().__init__(innovation_num)
@@ -22,8 +23,6 @@ class NodeGene(Gene):
         if not isinstance(a, NodeGene):
             return False
         return self.innovation_num == a.getInnovationNum()
-    
+
     def hashCode(self):
         return self.innovation_num
-
-

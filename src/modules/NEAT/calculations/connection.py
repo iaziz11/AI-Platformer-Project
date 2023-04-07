@@ -28,4 +28,3 @@ class Connection():
 
     def setEnabled(self, a):
         self.enabled = a
-

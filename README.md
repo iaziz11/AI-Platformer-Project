@@ -1,7 +1,7 @@
 # AI-Platformer-Project
 
 ## Description
-This application allows the user to train an AI model to complete a level of a Mario-like platformer. Users can create levels, and then train models on these levels. Users can also play their levels themselves if they wish.
+This application allows the user to train an AI model to complete a level of a Mario-like platformer. Users can create levels, and then train models on these levels. Users can also play their levels themselves, if they wish.
 <p align="center">
   <img src="./img/sampleimg.PNG" alt="sample" width="700" height="400">
 </p>
